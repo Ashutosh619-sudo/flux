@@ -16,7 +16,7 @@ from .app import run_pipeline
 def main(watch, ignore, exts, debounce, config, cmd):
     """HRM: universal hot-reload manager."""
     settings = load_settings(
-        config_file    = config,
+        config_path    = config,
         watch_paths    = list(watch),
         ignore_paths   = list(ignore),
         exts           = exts.split(",") if exts else [],
