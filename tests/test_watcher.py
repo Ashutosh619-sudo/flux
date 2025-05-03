@@ -1,12 +1,9 @@
-# tests/test_watcher.py
-
 import time
 import pytest
 from pathlib import Path
 from watchdog.events import FileCreatedEvent
 from flux.watcher import WatchdogWatcher
 
-@pytest.mark.flaky(reruns=2, reruns_delay=0.2)
 def test_watchdog_watcher_detects_file_creation(tmp_path):
     events = []
 
@@ -32,7 +29,6 @@ def test_watchdog_watcher_detects_file_creation(tmp_path):
     ), f"No FileCreatedEvent for hello.txt; got: {events}"
 
 
-@pytest.mark.flaky(reruns=2, reruns_delay=0.2)
 def test_watchdog_watcher_respects_ignore_pattern(tmp_path):
     events = []
 

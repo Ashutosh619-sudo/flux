@@ -1,5 +1,3 @@
-# src/flux/watcher.py
-
 import asyncio
 from abc import ABC, abstractmethod
 from pathlib import Path

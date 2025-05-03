@@ -1,5 +1,3 @@
-# Updated tests/test_config.py
-
 import pytest
 from pathlib import Path
 from flux.config import load_settings

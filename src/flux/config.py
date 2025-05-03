@@ -1,10 +1,8 @@
-# src/flux/config.py
-
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Set, Optional
 import tomllib
-import yaml  # ensure you have pyyaml installed
+import yaml
 
 @dataclass
 class Settings:

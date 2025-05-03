@@ -1,5 +1,3 @@
-# src/flux/app.py
-
 import asyncio
 from pathlib import Path
 from typing import List
