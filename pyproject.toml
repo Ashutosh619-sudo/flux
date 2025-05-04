@@ -12,6 +12,11 @@ license = {text = "MIT"}
 keywords = ["hot-reload", "watch", "cli", "flux"]
 dynamic = ["dependencies"]
 
+
+authors = [
+  { name  = "Ashutosh Singh", email = "ashutoshsingh@gmail.com" },
+]
+
 [project.scripts]
 flux = "flux.cli:main"
 
