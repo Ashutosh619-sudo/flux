@@ -20,7 +20,10 @@ Flux is a cross-platform, language-agnostic CLI tool that watches your code and 
 
 ## 💾 Installation
 
-From PyPI (soon):
+PyPI link:
+https://pypi.org/project/flux-reload/
+
+From PyPI:
 
 ```bash
 pip install flux
