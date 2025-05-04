@@ -1,5 +1,3 @@
-# tests/test_debouncer.py
-
 import asyncio
 import pytest
 from flux.debouncer import debouncer, ReloadSignal
