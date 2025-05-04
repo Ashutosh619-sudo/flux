@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flux"
+version = "0.1.0"
+description = "Universal Hot-Reload Manager"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+keywords = ["hot-reload", "watch", "cli", "flux"]
+dynamic = ["dependencies"]
+
+[project.scripts]
+flux = "flux.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements.txt"}
