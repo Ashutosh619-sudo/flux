@@ -1,26 +1,18 @@
-# src/flux/runner.py
-
 import asyncio
-from typing import List, Tuple, Union
-
-from asyncio.subprocess import Process, PIPE
-
+from typing import List, Optional
 from flux.debouncer import ReloadSignal
-
-# Type alias for UI events
-UIEvent = Tuple[str, Union[int, str]]
-
+from asyncio.subprocess import Process
 
 async def process_mgr(
     reload_q: asyncio.Queue[ReloadSignal],
-    ui_q: asyncio.Queue[UIEvent],
+    ui_q: Optional[asyncio.Queue],
     cmd: List[str],
 ) -> None:
     """
-    Launch a subprocess for `cmd`, forward its stdout/stderr into `ui_q`,
-    and restart it whenever a ReloadSignal arrives on `reload_q`.
+    Launch the subprocess, forward its stdout/stderr to this process's stdout/stderr,
+    and restart it on each ReloadSignal.
     """
-    proc: Process | None = None
+    proc: Optional[Process] = None
 
     async def start_process():
         nonlocal proc
@@ -29,35 +21,39 @@ async def process_mgr(
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
-        ui_q.put_nowait(("proc_started", proc.pid))
+        print(f"\n[flux] ▶ Started PID={proc.pid}\n", flush=True)
+        # stream stdout/stderr
+        async def _stream(reader, is_err=False):
+            while True:
+                line = await reader.readline()
+                if not line:
+                    break
+                text = line.decode(errors="replace").rstrip("\n")
+                if is_err:
+                    print(f"[flux][stderr] {text}", flush=True)
+                else:
+                    print(f"[flux][stdout] {text}", flush=True)
 
-        asyncio.create_task(read_stream(proc.stdout, "stdout"))
-        asyncio.create_task(read_stream(proc.stderr, "stderr"))
+        asyncio.create_task(_stream(proc.stdout, is_err=False))
+        asyncio.create_task(_stream(proc.stderr, is_err=True))
 
-    async def read_stream(stream: asyncio.StreamReader, label: str):
-        """Read lines from the given stream and push (label, text) into ui_q."""
-        assert stream is not None
-        while True:
-            line = await stream.readline()
-            if not line:
-                break
-            ui_q.put_nowait((label, line.decode(errors="replace")))
-
+    # initial start
     await start_process()
 
     try:
         while True:
+            # wait for debouncer
             await reload_q.get()
 
             if proc and proc.returncode is None:
+                print(f"\n[flux] ⏹ Stopping PID={proc.pid}", flush=True)
                 proc.terminate()
                 try:
                     await asyncio.wait_for(proc.wait(), timeout=5.0)
                 except asyncio.TimeoutError:
                     proc.kill()
                     await proc.wait()
-
-                ui_q.put_nowait(("proc_exited", proc.returncode))
+                print(f"[flux] ⚡ Restarting (exit={proc.returncode})\n", flush=True)
 
             await start_process()
 
