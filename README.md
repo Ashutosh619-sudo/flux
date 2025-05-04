@@ -26,7 +26,7 @@ https://pypi.org/project/flux-reload/
 From PyPI:
 
 ```bash
-pip install flux
+pip install flux-reload
 ```
 
 From source (editable mode):
