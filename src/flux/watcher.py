@@ -66,7 +66,6 @@ class FileWatcherService:
     def __init__(self, watcher: IFileSystemWatcher, raw_q: asyncio.Queue):
         self._watcher = watcher
         self._raw_q   = raw_q
-        self._loop    = asyncio.get_event_loop()
 
     async def run(self):
         self._watcher.start()
