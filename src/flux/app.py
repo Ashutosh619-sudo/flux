@@ -6,7 +6,7 @@ from flux.config import Settings
 from flux.watcher import WatchdogWatcher, FileWatcherService
 from flux.debouncer import debouncer
 from flux.runner import process_mgr
-
+from flux.ui import renderer
 async def run_pipeline(settings: Settings):
     """
     Build and run the async pipeline:
@@ -38,7 +38,8 @@ async def run_pipeline(settings: Settings):
     tasks: List[asyncio.Task] = [
         asyncio.create_task(watcher_service.run()),
         asyncio.create_task(debouncer(raw_q, reload_q, settings.debounce_ms)),
-        asyncio.create_task(process_mgr(reload_q, ui_q, settings.cmd))
+        asyncio.create_task(process_mgr(reload_q, ui_q, settings.cmd)),
+        asyncio.create_task(renderer(ui_q))
     ]
 
     try:
