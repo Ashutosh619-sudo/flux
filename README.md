@@ -1,6 +1,6 @@
 # Flux
 
-**Universal Hot-Reload Manager**
+**Universal Live-Reload Manager**
 
 Flux is a cross-platform, language-agnostic CLI tool that watches your code and automatically restarts **any** shell command when files change. It ships with zero-config defaults, optional TOML/YAML configuration, and a Rich-powered TUI for live logs and timing.
 
